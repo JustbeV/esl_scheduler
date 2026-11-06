@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A simple ESL teacher class scheduling dashboard.">
+  <title>ESL Scheduler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/calendar.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="ESL Scheduler home">
+        <span class="brand-mark">E</span>
+        <span><strong>ESL Scheduler</strong><small>TEACHER WORKSPACE</small></span>
+      </a>
+
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-link active" data-page="dashboard"><span class="nav-icon">▦</span>Dashboard</button>
+        <button class="nav-link" data-page="calendar"><span class="nav-icon">▣</span>Calendar</button>
+        <button class="nav-link" data-page="students"><span class="nav-icon">♙</span>Students</button>
+        <button class="nav-link" data-page="classes"><span class="nav-icon">▤</span>Classes</button>
+        <button class="nav-link" data-page="reports"><span class="nav-icon">▥</span>Reports</button>
+      </nav>
+
+      <div class="nav-label settings-label">PREFERENCES</div>
+      <nav class="main-nav">
+        <button class="nav-link" data-page="settings"><span class="nav-icon">⚙</span>Settings</button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="storage-note"><span class="storage-dot"></span><span><strong>Saved on this device</strong><small>Your data stays in this browser.</small></span></div>
+        <button class="profile-mini" id="profileButton">
+          <span class="avatar">ET</span>
+          <span><strong id="sidebarTeacherName">ESL Teacher</strong><small>Teacher account</small></span>
+          <span class="profile-more">···</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Open navigation">☰</button>
+        <div class="breadcrumb"><span>Workspace</span><b>/</b><strong id="pageCrumb">Dashboard</strong></div>
+        <div class="topbar-actions">
+          <span class="today-label" id="todayLabel"></span>
+          <button class="button button-primary button-small" id="topAddClass">＋ Schedule class</button>
+        </div>
+      </header>
+
+      <div class="page-wrap">
+        <section class="page-section active" id="page-dashboard">
+          <div class="page-heading">
+            <div><p class="eyebrow" id="welcomeDate">YOUR OVERVIEW</p><h1 id="welcomeTitle">Good day!</h1><p class="muted">Here's what's happening with your classes.</p></div>
+            <button class="button button-primary" id="dashboardAddClass">＋ Schedule a class</button>
+          </div>
+
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-top"><span>Total students</span><span class="stat-icon blue">♙</span></div><strong class="stat-number" id="statStudents">0</strong><small class="stat-foot">Individual and group learners</small></article>
+            <article class="stat-card"><div class="stat-top"><span>Today's classes</span><span class="stat-icon violet">▣</span></div><strong class="stat-number" id="statToday">0</strong><small class="stat-foot">Scheduled for today</small></article>
+            <article class="stat-card"><div class="stat-top"><span>Upcoming classes</span><span class="stat-icon amber">◷</span></div><strong class="stat-number" id="statUpcoming">0</strong><small class="stat-foot">Future scheduled lessons</small></article>
+            <article class="stat-card"><div class="stat-top"><span>Completed lessons</span><span class="stat-icon green">✓</span></div><strong class="stat-number" id="statCompleted">0</strong><small class="stat-foot">All-time completed sessions</small></article>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="panel schedule-panel">
+              <div class="panel-heading"><div><h2>Today's schedule</h2><p class="muted" id="todayScheduleSub">Your lessons for today</p></div><button class="text-button" data-go="calendar">View calendar →</button></div>
+              <div id="todaySchedule" class="schedule-list"></div>
+            </section>
+            <section class="panel quick-panel">
+              <div class="panel-heading"><div><h2>Quick actions</h2><p class="muted">Manage your teaching day</p></div></div>
+              <button class="quick-action" id="quickSchedule"><span class="quick-icon blue">＋</span><span><strong>Schedule a class</strong><small>Create a new lesson</small></span><b>›</b></button>
+              <button class="quick-action" id="quickStudent"><span class="quick-icon violet">♙</span><span><strong>Add a student</strong><small>Create a student profile</small></span><b>›</b></button>
+              <button class="quick-action" id="quickBackup"><span class="quick-icon green">⇩</span><span><strong>Back up your data</strong><small>Download a JSON copy</small></span><b>›</b></button>
+            </section>
+          </div>
+
+          <section class="panel upcoming-panel">
+            <div class="panel-heading"><div><h2>Upcoming classes</h2><p class="muted">Your next scheduled lessons</p></div><button class="text-button" data-go="classes">See all classes →</button></div>
+            <div class="table-wrap"><table><thead><tr><th>STUDENT / GROUP</th><th>DATE & TIME</th><th>LESSON</th><th>TYPE</th><th>STATUS</th></tr></thead><tbody id="upcomingTable"></tbody></table></div>
+          </section>
+        </section>
+
+        <section class="page-section" id="page-calendar">
+          <div class="page-heading">
+            <div><p class="eyebrow">PLAN YOUR TEACHING</p><h1>Calendar</h1><p class="muted">Keep every lesson organized in one place.</p></div>
+            <button class="button button-primary" id="calendarAddClass">＋ Schedule a class</button>
+          </div>
+          <section class="panel calendar-panel">
+            <div class="calendar-toolbar">
+              <div class="calendar-month-control"><button class="icon-button" id="calendarPrev" aria-label="Previous period">‹</button><h2 id="calendarTitle"></h2><button class="icon-button" id="calendarNext" aria-label="Next period">›</button><button class="button button-quiet button-small" id="calendarToday">Today</button></div>
+              <div class="view-switch"><button class="view-button active" data-view="month">Month</button><button class="view-button" data-view="week">Week</button><button class="view-button" data-view="day">Day</button></div>
+            </div>
+            <div id="calendarContent"></div>
+            <div class="calendar-legend"><span><i class="legend-dot online"></i>Online</span><span><i class="legend-dot onsite"></i>Face-to-face</span><span><i class="legend-dot done"></i>Completed</span><span><i class="legend-dot cancelled"></i>Cancelled</span></div>
+          </section>
+        </section>
+
+        <section class="page-section" id="page-students">
+          <div class="page-heading"><div><p class="eyebrow">LEARNER DIRECTORY</p><h1>Students</h1><p class="muted">Manage individual learners and class groups.</p></div><button class="button button-primary" id="addStudentButton">＋ Add student</button></div>
+          <div class="toolbar-row"><div class="search-box"><span>⌕</span><input id="studentSearch" type="search" placeholder="Search students or groups..."></div><div class="filter-group"><select id="studentTypeFilter"><option value="all">All types</option><option value="individual">Individual</option><option value="group">Group</option></select></div></div>
+          <div class="student-grid" id="studentGrid"></div>
+        </section>
+
+        <section class="page-section" id="page-classes">
+          <div class="page-heading"><div><p class="eyebrow">LESSON MANAGEMENT</p><h1>Classes</h1><p class="muted">Review, update, and manage every lesson.</p></div><button class="button button-primary" id="classesAddClass">＋ Schedule a class</button></div>
+          <div class="toolbar-row"><div class="search-box"><span>⌕</span><input id="classSearch" type="search" placeholder="Search by student or lesson..."></div><div class="filter-group"><select id="classStatusFilter"><option value="all">All statuses</option><option value="upcoming">Upcoming</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option><option value="no-show">No-show</option></select><select id="classModeFilter"><option value="all">All formats</option><option value="online">Online</option><option value="onsite">Face-to-face</option></select></div></div>
+          <section class="panel"><div class="table-wrap"><table><thead><tr><th>STUDENT / GROUP</th><th>DATE & TIME</th><th>LESSON</th><th>FORMAT</th><th>STATUS</th><th></th></tr></thead><tbody id="classesTable"></tbody></table></div></section>
+        </section>
+
+        <section class="page-section" id="page-reports">
+          <div class="page-heading"><div><p class="eyebrow">TEACHING ACTIVITY</p><h1>Reports</h1><p class="muted">A quick look at your lesson activity.</p></div></div>
+          <div class="stats-grid report-stats"><article class="stat-card"><div class="stat-top"><span>All lessons</span><span class="stat-icon blue">▤</span></div><strong class="stat-number" id="reportAll">0</strong></article><article class="stat-card"><div class="stat-top"><span>Completed</span><span class="stat-icon green">✓</span></div><strong class="stat-number" id="reportDone">0</strong></article><article class="stat-card"><div class="stat-top"><span>Cancelled</span><span class="stat-icon amber">×</span></div><strong class="stat-number" id="reportCancelled">0</strong></article><article class="stat-card"><div class="stat-top"><span>No-show</span><span class="stat-icon violet">!</span></div><strong class="stat-number" id="reportNoShow">0</strong></article></div>
+          <section class="panel report-panel"><div class="panel-heading"><div><h2>Lesson status breakdown</h2><p class="muted">Based on all saved classes</p></div></div><div id="reportBreakdown" class="breakdown"></div></section>
+        </section>
+
+        <section class="page-section" id="page-settings">
+          <div class="page-heading"><div><p class="eyebrow">PERSONALIZE YOUR WORKSPACE</p><h1>Settings</h1><p class="muted">Update your profile and manage your local data.</p></div></div>
+          <div class="settings-grid">
+            <section class="panel settings-panel"><div class="panel-heading"><div><h2>Teacher profile</h2><p class="muted">This name appears in your workspace.</p></div></div><form id="settingsForm" class="form-stack"><label>Teacher's name<input id="teacherNameInput" type="text" maxlength="60" placeholder="e.g. Alex Morgan"></label><label>Default lesson duration<select id="defaultDuration"><option value="25">25 minutes</option><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="50">50 minutes</option><option value="60">60 minutes</option></select></label><button class="button button-primary" type="submit">Save settings</button></form></section>
+            <section class="panel settings-panel"><div class="panel-heading"><div><h2>Data backup</h2><p class="muted">Your information is stored in this browser only.</p></div></div><p class="settings-copy">Export a JSON backup regularly. You can restore that file in this browser or another browser running this app.</p><div class="backup-actions"><button class="button button-secondary" id="exportButton">⇩ Export backup</button><label class="button button-secondary file-button">⇧ Import backup<input type="file" id="importInput" accept=".json,application/json"></label></div><p class="privacy-note">No account or server is used. Clearing browser storage can permanently remove your saved data.</p></section>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header"><div><p class="eyebrow" id="modalEyebrow">LESSON DETAILS</p><h2 id="modalTitle">Schedule a class</h2></div><button class="icon-button" id="modalClose" aria-label="Close dialog">×</button></div>
+      <form id="classForm" class="form-stack">
+        <input type="hidden" id="classId">
+        <div class="form-grid">
+          <label>Class format<select id="classMode"><option value="online">Online</option><option value="onsite">Face-to-face</option></select></label>
+          <label>Student type<select id="classStudentType"><option value="individual">Individual</option><option value="group">Group</option></select></label>
+        </div>
+        <label id="studentSelectLabel">Student<select id="classStudent" required></select></label>
+        <div class="form-grid"><label>Date<input type="date" id="classDate" required></label><label>Lesson topic<input type="text" id="classTopic" maxlength="100" placeholder="e.g. English conversation" required></label></div>
+        <div class="form-grid"><label>Start time<input type="time" id="classStart" required></label><label>End time<input type="time" id="classEnd" required></label></div>
+        <label id="locationLabel">Meeting link<input type="url" id="classLocation" placeholder="https://..."></label>
+        <label>Notes<textarea id="classNotes" rows="3" placeholder="Add lesson goals or reminders..."></textarea></label>
+        <div id="conflictMessage" class="form-message" hidden></div>
+        <div class="modal-footer"><button type="button" class="button button-quiet" id="cancelModal">Cancel</button><button type="submit" class="button button-primary" id="saveClassButton">Save class</button></div>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="studentModalBackdrop" hidden>
+    <section class="modal modal-narrow" role="dialog" aria-modal="true" aria-labelledby="studentModalTitle">
+      <div class="modal-header"><div><p class="eyebrow">LEARNER DIRECTORY</p><h2 id="studentModalTitle">Add student</h2></div><button class="icon-button" id="studentModalClose" aria-label="Close dialog">×</button></div>
+      <form id="studentForm" class="form-stack">
+        <input type="hidden" id="studentId">
+        <label>Name<input id="studentName" type="text" maxlength="70" required placeholder="Student or group name"></label>
+        <label>Type<select id="studentType"><option value="individual">Individual student</option><option value="group">Group</option></select></label>
+        <label>Email / contact<input id="studentContact" type="text" maxlength="100" placeholder="Email or contact detail"></label>
+        <label>Country / timezone<input id="studentCountry" type="text" maxlength="80" placeholder="e.g. Japan (UTC+9)"></label>
+        <label>Notes<textarea id="studentNotes" rows="3" placeholder="Learning goals, level, or other notes..."></textarea></label>
+        <div class="modal-footer"><button type="button" class="button button-quiet" id="studentCancel">Cancel</button><button type="submit" class="button button-primary">Save student</button></div>
+      </form>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/students.js"></script>
+  <script src="js/schedules.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
